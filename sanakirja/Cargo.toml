@@ -1,0 +1,42 @@
+[package]
+name = "sanakirja"
+version = "1.2.9"
+authors = [ "Pierre-Étienne Meunier" ]
+edition = "2018"
+description = "Copy-on-write datastructures, storable on disk (or elsewhere) with a stable format."
+license = "MIT/Apache-2.0"
+documentation = "https://docs.rs/sanakirja"
+repository = "https://nest.pijul.com/pijul/sanakirja"
+include = [
+"Cargo.toml",
+"src/lib.rs",
+"src/debug.rs",
+"src/environment/mod.rs",
+"src/environment/global_header.rs",
+"src/environment/muttxn.rs",
+"src/tests.rs"
+]
+
+[features]
+default = [ "mmap" ]
+crc32 = [ "crc32fast", "lazy_static", "sanakirja-core/crc32" ]
+mmap = [ "memmap", "fs2" ]
+
+[dependencies]
+parking_lot = "0.11"
+thiserror = "1.0"
+log = { version = "0.4" }
+sanakirja-core = { path = "../sanakirja-core", version = "1.2.12" }
+memmap = { version = "0.7", optional = true }
+fs2 = { version = "0.4", optional = true }
+crc32fast = { version = "1.2", optional = true, default-features = false }
+lazy_static = { version = "1.4", optional = true }
+
+[dev-dependencies]
+env_logger = "0.8"
+libc = "0.2"
+lmdb-rs = "0.7"
+sled = "0.34"
+rand = {version = "0.8", features = [ "small_rng" ] }
+uuid = { version = "0.8", features = [ "v4" ] }
+tempfile = "3.2"

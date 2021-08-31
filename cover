@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -e
+set -x
+
+tmpfile=$(mktemp /tmp/sanakirja.XXXX)
+
+rm -f sanakirja/sanakirja-*.profraw
+
+RUST_BACKTRACE=1 RUSTFLAGS="-Zinstrument-coverage" LLVM_PROFILE_FILE="sanakirja-%m.profraw" cargo t -p sanakirja --color always 2>&1 | tee $tmpfile
+
+llvm-profdata merge -sparse sanakirja/sanakirja-*.profraw -o 'sanakirja.profdata'
+
+TEST=$(grep target/debug/deps/sanakirja- $tmpfile | sed -e "s#.*target/debug/deps/\(.*\)#\1#")
+
+llvm-cov report --use-color --ignore-filename-regex='/.cargo/registry|sanakirja/' --instr-profile='sanakirja.profdata' --object target/debug/deps/$TEST
+
+llvm-cov show --use-color --ignore-filename-regex='/.cargo/registry|sanakirja/' --instr-profile='sanakirja.profdata' --object target/debug/deps/$TEST --show-instantiations --show-line-counts-or-regions -Xdemangler=rustfilt | less -R

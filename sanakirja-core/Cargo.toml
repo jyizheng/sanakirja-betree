@@ -1,0 +1,42 @@
+[package]
+name = "sanakirja-core"
+version = "1.2.12"
+edition = "2018"
+description = "Copy-on-write datastructures, storable on disk (or elsewhere) with a stable format."
+authors = ["Pierre-Étienne Meunier", "Florent Becker"]
+license = "MIT/Apache-2.0"
+documentation = "https://docs.rs/sanakirja"
+repository = "https://nest.pijul.com/pijul/sanakirja"
+include = [
+"Cargo.toml",
+"src/lib.rs",
+"src",
+"src/btree",
+"src/btree/page_cursor.rs",
+"src/btree/page_unsized",
+"src/btree/page_unsized/alloc.rs",
+"src/btree/page_unsized/rebalance.rs",
+"src/btree/page_unsized/header.rs",
+"src/btree/page_unsized/put.rs",
+"src/btree/page_unsized/cursor.rs",
+"src/btree/put.rs",
+"src/btree/page",
+"src/btree/page/alloc.rs",
+"src/btree/page/rebalance.rs",
+"src/btree/page/put.rs",
+"src/btree/del.rs",
+"src/btree/mod.rs",
+"src/btree/page_unsized.rs",
+"src/btree/cursor.rs",
+"src/btree/page.rs"
+]
+
+[features]
+crc32 = [ "crc32fast" ]
+std = []
+ed25519 = [ "ed25519-zebra", "ed25519-zebra/serde" ]
+
+[dependencies]
+crc32fast = { version = "1.2", optional = true, default-features = false }
+uuid = { version = "0.8", optional = true }
+ed25519-zebra = { version = "2.2", optional = true }
